@@ -24,7 +24,7 @@ from six import BytesIO
 from django.http import HttpResponse
 from PIL import Image,ImageDraw,ImageFont
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 
 current_path = os.path.normpath(os.path.dirname(__file__))
 
