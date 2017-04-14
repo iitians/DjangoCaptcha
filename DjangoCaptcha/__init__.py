@@ -17,13 +17,14 @@ limitations under the License.
 
 """
 
+import os
+import random
+from math import ceil
+from six import BytesIO
 from django.http import HttpResponse
 from PIL import Image,ImageDraw,ImageFont
-import random,StringIO
-import os
-from math import ceil
 
-__version__ = '0.3.1',  
+__version__ = '0.3.2'
 
 current_path = os.path.normpath(os.path.dirname(__file__))
 
@@ -138,10 +139,10 @@ class Captcha(object):
         for i in range(random.randrange(c-2,c)):
             line_color = (random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))
             xy = (
-                    random.randrange(0,int(self.img_width*0.2)),
-                    random.randrange(0,self.img_height),
-                    random.randrange(3*self.img_width/4,self.img_width),
-                    random.randrange(0,self.img_height)
+                    random.randrange(0, int(self.img_width*0.2)),
+                    random.randrange(0, self.img_height),
+                    random.randrange(int(3*self.img_width/4), self.img_width),
+                    random.randrange(0, self.img_height)
                 )
             draw.line(xy,fill=line_color,width=int(self.font_size*0.1))
             #draw.arc(xy,fill=line_color,width=int(self.font_size*0.1))
@@ -154,22 +155,22 @@ class Captcha(object):
         for i in self.code:
             # 上下抖动量,字数越多,上下抖动越大
             m = int(len(self.code))
-            y = random.randrange(1,3)
+            y = random.randrange(1, 3)
 
             if i in ('+','=','?'):
                 # 对计算符号等特殊字符放大处理
                 m = ceil(self.font_size*0.8)
             else:
                 # 字体大小变化量,字数越少,字体大小变化越多
-                m = random.randrange(0,int( 45 / self.font_size) + int(self.font_size/5))
+                m = random.randrange(0, int( 45 / self.font_size) + int(self.font_size/5))
 
             self.font = ImageFont.truetype(self.font_path.replace('\\','/'),self.font_size + int(ceil(m)))
-            draw.text((x,y), i, font=self.font, fill=random.choice(self.font_color))
+            draw.text((x,y), i, font=self.font, fill = random.choice(self.font_color))
             x += self.font_size*0.9
 
         del x
         del draw
-        buf = StringIO.StringIO()
+        buf = BytesIO()
         im.save(buf,'gif')
         buf.closed
         return HttpResponse(buf.getvalue(),'image/gif')
