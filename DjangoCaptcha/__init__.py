@@ -1,7 +1,7 @@
 #encoding:utf-8
 
 """
-Copyright 2013 TY<tianyu0915@gmail.com>
+Copyright 2017 TY<master@t-y.me>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,20 +41,17 @@ class Captcha(object):
         # image size (pix)
         self.img_width = 150
         self.img_height = 30
-
-        # default type
+        
         self.type = 'number' 
+        self.mode = 'number'
 
     def _get_font_size(self):
-        """  将图片高度的80%作为字体大小
-        """
-
         s1 = int(self.img_height * 0.8)
         s2 = int(self.img_width/len(self.code))
-        return int(min((s1,s2)) + max((s1,s2))*0.05)
+        return int(min((s1,s2)) + max((s1, s2))*0.05)
 
     def _get_words(self):
-        """ The words list
+        """  words list
         """
 
         # TODO  扩充单词表
@@ -67,15 +64,9 @@ class Captcha(object):
         return set([line.replace('\n','') for line in f.readlines()])
 
     def _set_answer(self,answer):
-        """  设置答案
-        
-        """
         self.django_request.session[self.session_key] = str(answer)
 
-    def _yield_code(self):
-        """  生成验证码文字,以及答案
-        
-        """
+    def _generate(self):
 
         # 英文单词验证码
         def word():
@@ -100,7 +91,7 @@ class Captcha(object):
             self._set_answer(z)
             return code
 
-        fun = eval(self.type.lower())
+        fun = eval(self.mode.lower())
         return fun()
 
     def display(self):
@@ -114,15 +105,11 @@ class Captcha(object):
         self.background = (random.randrange(230,255),random.randrange(230,255),random.randrange(230,255))
 
         # font path
-        self.font_path = os.path.join(current_path,'timesbi.ttf')
-        #self.font_path = os.path.join(current_path,'Menlo.ttc')
+        self.font_path = os.path.join(current_path,'timesbi.ttf') # or Menlo.ttc
 
-        # clean sesson
         self.django_request.session[self.session_key] = '' 
-
-        # creat a image picture
         im = Image.new('RGB',(self.img_width,self.img_height),self.background)
-        self.code = self._yield_code()
+        self.code = self._generate()
 
         # set font size automaticly
         self.font_size = self._get_font_size()
@@ -131,13 +118,13 @@ class Captcha(object):
         draw = ImageDraw.Draw(im)
 
         # draw noisy point/line
-        if self.type == 'word':
+        if self.mode == 'word':
             c = int(8/len(self.code)*3) or 3
-        elif self.type == 'number':
+        elif self.mode == 'number':
             c = 4
 
-        for i in range(random.randrange(c-2,c)):
-            line_color = (random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))
+        for i in range(random.randrange(c-2, c)):
+            line_color = (random.randrange(0,255), random.randrange(0,255), random.randrange(0,255))
             xy = (
                     random.randrange(0, int(self.img_width*0.2)),
                     random.randrange(0, self.img_height),
@@ -148,7 +135,7 @@ class Captcha(object):
             #draw.arc(xy,fill=line_color,width=int(self.font_size*0.1))
         #draw.arc(xy,0,1400,fill=line_color)
 
-        # code part
+        # main part
         j = int(self.font_size*0.3)
         k = int(self.font_size*0.5)
         x = random.randrange(j,k) #starts point
@@ -173,30 +160,31 @@ class Captcha(object):
         buf = BytesIO()
         im.save(buf,'gif')
         buf.closed
-        return HttpResponse(buf.getvalue(),'image/gif')
+        return HttpResponse(buf.getvalue(), 'image/gif')
 
     def validate(self, code):
-        """ 
-        validate user's input
+        """ user input validate
         """
 
         if not code:
             return False
+
         code = code.strip()
         _code = self.django_request.session.get(self.session_key) or ''
         self.django_request.session[self.session_key] = ''
         return _code.lower() == str(code).lower()
 
     def check(self,code):
-        """
+        """ Deprecated 
         This function will no longer be supported after  version  0.4
+
         """
 
         return self.validate(code)
 
 
 class Code(Captcha):
-    """
+    """ Deprecated 
     compatibility for less than v2.0.6 
     """
     pass

@@ -5,16 +5,16 @@ from DjangoCaptcha import Captcha
 
 def code(request):
     ca =  Captcha(request)
-    ca.words = ['hello','world','helloworld']
-    ca_type = request.GET.get('type', 'word').lower()
-    assert ca_type in ['number', 'word']
+    ca.words = ['google','twitter','facebook', 'tomcat', 'nginx']
+    ca_mode = request.GET.get('mode', 'word').lower()
+    assert ca_mode in ['number', 'word']
 
-    ca.type = ca_type
+    ca.mode = ca_mode
     return ca.display()
 
 def index(request):
-    ca_type = request.GET.get('type', 'word').lower()
-    assert ca_type in ['number', 'word']
+    ca_mode = request.GET.get('mode', 'word').lower()
+    assert ca_mode in ['number', 'word']
 
     _code = request.GET.get('code') or ''
     if not _code:

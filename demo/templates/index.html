@@ -9,14 +9,14 @@
     </head>
     <body>
         <div id="tab">
-            captch type: <a href="/?type=word" class='{% if ca_type == "word" %}selected{% endif %}'>word</a> 
-            <a href="/?type=number"  class='{% if ca_type == "number" %}selected{% endif %}'>number</a>
+            captch mode: <a href="/?mode=word" class='{% if ca_mode == "word" %}selected{% endif %}'>mode 1</a> 
+            <a href="/?mode=number"  class='{% if ca_mode == "number" %}selected{% endif %}'>mode 2</a>
         </div>
 
-        <a href="/?type={{ ca_type }}" title="click to refresh"><img src='/code/?type={{ ca_type }}'></a>
+        <a href="/?mode={{ ca_mode }}" title="click to refresh"><img src='/code/?mode={{ ca_mode }}'></a>
         <form method='GET','action'='/'>
             <input name='code'>
-            <input type='submit' value='check'>
+            <input type='submit' value='validate'>
         </form>
 
     </body>
