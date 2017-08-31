@@ -7,14 +7,14 @@ def code(request):
     ca =  Captcha(request)
     ca.words = ['google','twitter','facebook', 'tomcat', 'nginx']
     ca_mode = request.GET.get('mode', 'word').lower()
-    assert ca_mode in ['number', 'word']
+    assert ca_mode in ['number', 'word', 'four_number']
 
     ca.mode = ca_mode
     return ca.display()
 
 def index(request):
     ca_mode = request.GET.get('mode', 'word').lower()
-    assert ca_mode in ['number', 'word']
+    assert ca_mode in ['number', 'word', 'four_number']
 
     _code = request.GET.get('code') or ''
     if not _code:
