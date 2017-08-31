@@ -21,6 +21,7 @@ import os
 import random
 from math import ceil
 from six import BytesIO
+import string
 from django.http import HttpResponse
 from PIL import Image, ImageDraw, ImageFont
 
@@ -94,6 +95,12 @@ class Captcha(object):
             self._set_answer(z)
             return code
 
+        # 数字验证码
+        def four_number():
+            code = ''.join(random.sample(string.digits, 4))
+            self._set_answer(code)
+            return code
+
         fun = eval(self.mode.lower())
         return fun()
 
@@ -124,6 +131,8 @@ class Captcha(object):
         if self.mode == 'word':
             c = int(8/len(self.code)*3) or 3
         elif self.mode == 'number':
+            c = 4
+        elif self.mode == 'four_number':
             c = 4
 
         for i in range(random.randrange(c-2, c)):
