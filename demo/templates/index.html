@@ -11,6 +11,7 @@
         <div id="tab">
             captch mode: <a href="/?mode=word" class='{% if ca_mode == "word" %}selected{% endif %}'>mode 1</a> 
             <a href="/?mode=number"  class='{% if ca_mode == "number" %}selected{% endif %}'>mode 2</a>
+            <a href="/?mode=four_number"  class='{% if ca_mode == "four_number" %}selected{% endif %}'>mode 3</a>
         </div>
 
         <a href="/?mode={{ ca_mode }}" title="click to refresh"><img src='/code/?mode={{ ca_mode }}'></a>
