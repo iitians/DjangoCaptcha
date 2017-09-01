@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(name='DjangoCaptcha',  
       author='TY',  
       author_email='master@t-y.me', 
-      version='0.3.4', 
+      version='0.3.5', 
       description='A Captcha module for Django. Py3 supported',
       keywords ='django,captcha',
       url='http://github.com/ty-me/DjangoCaptcha',  

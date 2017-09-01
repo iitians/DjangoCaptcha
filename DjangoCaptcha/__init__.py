@@ -25,7 +25,7 @@ import string
 from django.http import HttpResponse
 from PIL import Image, ImageDraw, ImageFont
 
-__version__ = '0.3.3'
+__version__ = '0.3.5'
 
 current_path = os.path.normpath(os.path.dirname(__file__))
 
